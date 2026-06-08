@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import { ref, computed, onMounted, watch, onUnmounted, type Component } from 'vue';
 import echarts, { type ECharts } from '../utils/echarts';
 import { TrendingUp, Clock, Activity, Monitor, Zap } from 'lucide-vue-next';
 import type { PerformanceScore, WebVitals, MetricKey } from '../types/performance';
@@ -29,7 +29,7 @@ const overallScoreLabel = computed(() => {
   return '较差';
 });
 
-const metricIcons: Record<MetricKey, typeof TrendingUp> = {
+const metricIcons: Record<MetricKey, Component> = {
   fcp: Clock,
   lcp: Monitor,
   cls: Activity,

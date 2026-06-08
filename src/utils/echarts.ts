@@ -26,7 +26,7 @@ echarts.use([
 export default echarts;
 export type ECharts = ReturnType<typeof echarts.init>;
 
-export interface TooltipDataParam {
+export interface TooltipAxisDataParam {
   name: string;
   value: number | number[];
   data?: unknown;
@@ -40,6 +40,16 @@ export interface TooltipDataParam {
   seriesName: string;
   seriesType: string;
   color: string;
-  borderColor: string;
-  $vars: string[];
+}
+
+export interface TooltipItemDataParam {
+  name: string;
+  value: number | number[];
+  data?: unknown;
+  dataIndex: number;
+  seriesIndex: number;
+  seriesName: string;
+  seriesType: string;
+  color: string;
+  marker: string;
 }

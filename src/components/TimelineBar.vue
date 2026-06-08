@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted } from 'vue';
-import echarts, { type ECharts, type TooltipDataParam } from '../utils/echarts';
+import echarts, { type ECharts, type TooltipAxisDataParam } from '../utils/echarts';
 import type { NavigationTiming } from '../types/performance';
 
 const props = defineProps<{
@@ -68,7 +68,7 @@ function updateChart() {
       backgroundColor: 'rgba(15, 23, 42, 0.95)',
       borderColor: 'rgba(71, 85, 105, 0.5)',
       textStyle: { color: '#e2e8f0' },
-      formatter: (params: TooltipDataParam[]) => {
+      formatter: (params: TooltipAxisDataParam[]) => {
         const item = params[0];
         const val = typeof item.value === 'number' ? item.value : 0;
         const percentage = ((val / total) * 100).toFixed(1);

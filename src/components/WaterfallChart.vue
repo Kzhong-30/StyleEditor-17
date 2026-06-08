@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted } from 'vue';
-import echarts, { type ECharts, type TooltipDataParam } from '../utils/echarts';
+import echarts, { type ECharts, type TooltipItemDataParam } from '../utils/echarts';
 import type { NavigationTiming, ResourceItem, ResourceType } from '../types/performance';
 
 interface NavWaterfallItem {
@@ -94,7 +94,7 @@ function updateChart() {
       backgroundColor: 'rgba(15, 23, 42, 0.95)',
       borderColor: 'rgba(71, 85, 105, 0.5)',
       textStyle: { color: '#e2e8f0' },
-      formatter: (params: TooltipDataParam) => {
+      formatter: (params: TooltipItemDataParam) => {
         const item: WaterfallItem = allItems[params.dataIndex];
         if (!item) return '';
         const typeInfo = typeNames[item.type] || item.type;

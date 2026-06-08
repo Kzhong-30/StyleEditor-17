@@ -113,11 +113,6 @@ async function observeWebVitals(): Promise<WebVitals> {
     }
   }
 
-  const navEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-  if (navEntries.length > 0 && navEntries[0].loadEventEnd > 0) {
-    tbt = Math.max(tbt, Math.round(navEntries[0].loadEventEnd * 0.15));
-  }
-
   cls = Math.round(cls * 1000) / 1000;
   tbt = Math.round(tbt);
 
