@@ -47,7 +47,7 @@ function collectNavigationTiming(): NavigationTiming | null {
   };
 }
 
-function classifyResourceType(initiatorType: string, url: string): ResourceItem['type'] {
+export function classifyResourceType(initiatorType: string, url: string): ResourceItem['type'] {
   const ext = url.split('.').pop()?.toLowerCase() ?? '';
   if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif', 'ico'].includes(ext) || initiatorType === 'img') return 'image';
   if (['js', 'mjs'].includes(ext) || initiatorType === 'script') return 'js';

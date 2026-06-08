@@ -10,10 +10,16 @@ export default defineConfig({
     sourcemap: 'hidden',
     rollupOptions: {
       output: {
-        manualChunks: {
-          'echarts-vendor': ['echarts'],
-          'pdf-vendor': ['jspdf', 'html2canvas'],
-          'vue-vendor': ['vue', 'vue-router'],
+        manualChunks(id) {
+          if (id.includes('node_modules/zrender')) {
+            return 'zrender-vendor';
+          }
+          if (id.includes('node_modules/echarts')) {
+            return 'echarts-vendor';
+          }
+          if (id.includes('node_modules/vue') || id.includes('node_modules/@vue') || id.includes('node_modules/vue-router')) {
+            return 'vue-vendor';
+          }
         },
       },
     },

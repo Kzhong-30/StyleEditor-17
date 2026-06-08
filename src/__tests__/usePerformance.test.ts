@@ -1,14 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-function classifyResourceType(initiatorType: string, url: string): string {
-  const ext = url.split('.').pop()?.toLowerCase() ?? '';
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif', 'ico'].includes(ext) || initiatorType === 'img') return 'image';
-  if (['js', 'mjs'].includes(ext) || initiatorType === 'script') return 'js';
-  if (['css'].includes(ext) || initiatorType === 'link') return 'css';
-  if (['woff', 'woff2', 'ttf', 'otf', 'eot'].includes(ext)) return 'font';
-  if (['xmlhttprequest', 'fetch'].includes(initiatorType)) return 'xhr';
-  return 'xhr';
-}
+import { describe, it, expect } from 'vitest';
+import { classifyResourceType } from '../composables/usePerformance';
 
 describe('usePerformance helper functions', () => {
   describe('classifyResourceType', () => {

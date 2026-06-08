@@ -1,5 +1,5 @@
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, GaugeChart, CustomChart } from 'echarts/charts';
+import { BarChart, LineChart, GaugeChart, CustomChart, RadarChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -14,6 +14,7 @@ echarts.use([
   LineChart,
   GaugeChart,
   CustomChart,
+  RadarChart,
   TitleComponent,
   TooltipComponent,
   LegendComponent,
@@ -24,3 +25,12 @@ echarts.use([
 
 export default echarts;
 export type ECharts = ReturnType<typeof echarts.init>;
+
+export interface TooltipDataParam {
+  name: string;
+  value: number | number[];
+  data?: unknown;
+  dataIndex: number;
+  seriesIndex: number;
+  [key: string]: unknown;
+}

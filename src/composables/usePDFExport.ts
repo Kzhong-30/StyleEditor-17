@@ -1,6 +1,4 @@
 import { ref } from 'vue';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 export function usePDFExport() {
   const isExporting = ref(false);
@@ -15,6 +13,11 @@ export function usePDFExport() {
       if (!element) {
         throw new Error('未找到导出目标元素');
       }
+
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf')
+      ]);
 
       const canvas = await html2canvas(element, {
         scale: 2,
