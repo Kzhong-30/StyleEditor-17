@@ -73,7 +73,7 @@ function updateChart() {
         const val = typeof item.value === 'number' ? item.value : 0;
         const percentage = ((val / total) * 100).toFixed(1);
         return `
-          <div style="font-weight: 600; margin-bottom: 8px;">${item.name}</div>
+          <div style="font-weight: 600; margin-bottom: 8px;">${item.name ?? ''}</div>
           <div>耗时: ${val.toFixed(0)}ms</div>
           <div>占比: ${percentage}%</div>
         `;

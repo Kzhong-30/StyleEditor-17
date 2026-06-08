@@ -27,29 +27,29 @@ export default echarts;
 export type ECharts = ReturnType<typeof echarts.init>;
 
 export interface TooltipAxisDataParam {
-  name: string;
-  value: number | number[];
+  name?: string;
+  value?: number | number[];
   data?: unknown;
   dataIndex: number;
-  seriesIndex: number;
-  marker: string;
-  axisValueLabel: string;
-  axisType: string;
-  axisId: string;
-  axisIndex: number;
-  seriesName: string;
-  seriesType: string;
-  color: string;
+  seriesIndex?: number;
+  marker?: string;
+  axisValueLabel?: string;
+  axisType?: string;
+  axisId?: string;
+  axisIndex?: number;
+  seriesName?: string;
+  seriesType?: string;
+  color?: string;
 }
 
 export interface TooltipItemDataParam {
-  name: string;
-  value: number | number[];
+  name?: string;
+  value?: number | number[];
   data?: unknown;
   dataIndex: number;
-  seriesIndex: number;
-  seriesName: string;
-  seriesType: string;
-  color: string;
-  marker: string;
+  seriesIndex?: number;
+  seriesName?: string;
+  seriesType?: string;
+  color?: string;
+  marker?: string;
 }

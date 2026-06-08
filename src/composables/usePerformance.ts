@@ -113,19 +113,19 @@ async function observeWebVitals(): Promise<WebVitals> {
     }
   }
 
-  cls = Math.round(cls * 1000) / 1000;
-  tbt = Math.round(tbt);
-
-  if (fcp > 0 && lcp > 0) {
-    return { fcp, lcp, cls, fid, tbt };
-  }
-
   return new Promise((resolve) => {
     const alreadyLoaded = typeof document !== 'undefined' && document.readyState === 'complete';
+    const observeWindow = alreadyLoaded ? 500 : 3000;
 
     const timeLimit = setTimeout(() => {
-      resolve({ fcp, lcp, cls, fid, tbt });
-    }, alreadyLoaded ? 500 : 3000);
+      resolve({
+        fcp,
+        lcp,
+        cls: Math.round(cls * 1000) / 1000,
+        fid,
+        tbt: Math.round(tbt)
+      });
+    }, observeWindow);
 
     try {
       if (fcp === 0) {
@@ -178,7 +178,7 @@ async function observeWebVitals(): Promise<WebVitals> {
       longTaskObserver.observe({ entryTypes: ['longtask'] });
     } catch {
       clearTimeout(timeLimit);
-      resolve({ fcp, lcp, cls, fid, tbt });
+      resolve({ fcp, lcp, cls: Math.round(cls * 1000) / 1000, fid, tbt: Math.round(tbt) });
       return;
     }
 
@@ -186,7 +186,7 @@ async function observeWebVitals(): Promise<WebVitals> {
       setTimeout(() => {
         clearTimeout(timeLimit);
         resolve({ fcp, lcp, cls: Math.round(cls * 1000) / 1000, fid, tbt: Math.round(tbt) });
-      }, 500);
+      }, observeWindow);
     } else {
       window.addEventListener('load', () => {
         setTimeout(() => {
