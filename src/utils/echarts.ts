@@ -32,5 +32,14 @@ export interface TooltipDataParam {
   data?: unknown;
   dataIndex: number;
   seriesIndex: number;
-  [key: string]: unknown;
+  marker: string;
+  axisValueLabel: string;
+  axisType: string;
+  axisId: string;
+  axisIndex: number;
+  seriesName: string;
+  seriesType: string;
+  color: string;
+  borderColor: string;
+  $vars: string[];
 }

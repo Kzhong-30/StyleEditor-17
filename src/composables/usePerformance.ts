@@ -86,37 +86,74 @@ async function observeWebVitals(): Promise<WebVitals> {
   let fid = 0;
   let tbt = 0;
 
+  const paintEntries = performance.getEntriesByType('paint');
+  for (const entry of paintEntries) {
+    if (entry.name === 'first-contentful-paint') {
+      fcp = Math.max(0, entry.startTime);
+    }
+  }
+
+  const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
+  if (lcpEntries.length > 0) {
+    lcp = Math.max(0, lcpEntries[lcpEntries.length - 1].startTime);
+  }
+
+  const layoutShiftEntries = performance.getEntriesByType('layout-shift');
+  for (const entry of layoutShiftEntries) {
+    const shiftEntry = entry as LayoutShiftEntry;
+    if (!shiftEntry.hadRecentInput) {
+      cls += shiftEntry.value;
+    }
+  }
+
+  const longTaskEntries = performance.getEntriesByType('longtask');
+  for (const entry of longTaskEntries) {
+    if (entry.duration > 50) {
+      tbt += entry.duration - 50;
+    }
+  }
+
   const navEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-  if (navEntries.length > 0) {
-    const nav = navEntries[0];
-    fcp = Math.max(0, nav.responseStart + (nav.domInteractive - nav.responseStart) * 0.3);
-    lcp = Math.max(0, nav.loadEventEnd * 0.7);
-    tbt = Math.max(0, nav.loadEventEnd * 0.15);
+  if (navEntries.length > 0 && navEntries[0].loadEventEnd > 0) {
+    tbt = Math.max(tbt, Math.round(navEntries[0].loadEventEnd * 0.15));
+  }
+
+  cls = Math.round(cls * 1000) / 1000;
+  tbt = Math.round(tbt);
+
+  if (fcp > 0 && lcp > 0) {
+    return { fcp, lcp, cls, fid, tbt };
   }
 
   return new Promise((resolve) => {
+    const alreadyLoaded = typeof document !== 'undefined' && document.readyState === 'complete';
+
     const timeLimit = setTimeout(() => {
       resolve({ fcp, lcp, cls, fid, tbt });
-    }, 3000);
+    }, alreadyLoaded ? 500 : 3000);
 
     try {
-      const paintObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.name === 'first-contentful-paint') {
-            fcp = Math.max(0, entry.startTime);
+      if (fcp === 0) {
+        const paintObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.name === 'first-contentful-paint') {
+              fcp = Math.max(0, entry.startTime);
+            }
           }
-        }
-      });
-      paintObserver.observe({ entryTypes: ['paint'] });
+        });
+        paintObserver.observe({ entryTypes: ['paint'] });
+      }
 
-      const lcpObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        if (lastEntry) {
-          lcp = Math.max(0, lastEntry.startTime);
-        }
-      });
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      if (lcp === 0) {
+        const lcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          if (lastEntry) {
+            lcp = Math.max(0, lastEntry.startTime);
+          }
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      }
 
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
@@ -150,12 +187,19 @@ async function observeWebVitals(): Promise<WebVitals> {
       return;
     }
 
-    window.addEventListener('load', () => {
+    if (alreadyLoaded) {
       setTimeout(() => {
         clearTimeout(timeLimit);
         resolve({ fcp, lcp, cls: Math.round(cls * 1000) / 1000, fid, tbt: Math.round(tbt) });
       }, 500);
-    }, { once: true });
+    } else {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          clearTimeout(timeLimit);
+          resolve({ fcp, lcp, cls: Math.round(cls * 1000) / 1000, fid, tbt: Math.round(tbt) });
+        }, 500);
+      }, { once: true });
+    }
   });
 }
 
